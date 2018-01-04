@@ -1,0 +1,154 @@
+﻿Briefly address the following points, modify this text file and include it
+in your reply.
+------------------------------------------------------------------------------
+- Document modified by Jezz Lucena on November 19, 2015.
+
+
+Explain the conceptual distinctions between scripting languages, C++, C,
+and assembly and when it is appropriate and inappropriate to use each.
+--------------------------------------
+	To answer this question, I will explain how each of the listed languages
+
+run, ordered in “how close” to the CPU each of them runs.
+
+- Assembly: It is a low-level imperative programming language. It runs very
+close to the CPU, usually with an one-to-one relation between the Assembly’s
+instructions and the machine’s internal instructions. Each computer architecture
+(x86, x64, PowerPC, ARM, etc.) has its own Assembly dialect, with more or less
+instructions depending on what the processor is specialized. The Assembly code
+is converted into executable machine code by a program that is generally
+referred to as an “assembler”, through the process of “assembly” of the code. It
+is usually only used on Operating System development, very low-level and
+high-criticality applications.
+
+- C: It is a very popular procedural programming language. It is used in a broad
+number of applications, including embedded systems, high-criticality computer
+systems, and even on the implementation of video games. Since it runs reasonably
+close to the processor, the C programmer has strong responsibilities on how the
+processor deals with the code it is running. It is a compiled language, meaning
+it’s code is compiled into an executable file that can work in the platform the
+compiler was designed to work with. Compilers are available to nearly every
+operating system out today. It offers support to structured programming,
+allowing the developer to create and handle structs, which are like custom types
+of data, and served as a bases to the appearance of Object Oriented Languages.
+It is very popular on applications that need strong real-time processing, like
+3D video games, medical and financial software, besides specialized hardware
+programming.
+
+- C++: Deeply inspired in C, this is a more robust object-oriented programming
+languages. Even though it can still work as a procedural language, just like C,
+it offers support to the creation of classes and objects, and introduces the
+concepts of methods, privacy (e.g. public, protected, private) options on
+attributes and methods, and life cycle (e.g. static, constant) packaging,
+exception handling, polymorphism, and many frameworks and pre-implemented
+powerful data structures and classes. For being a more robust programming
+language, it runs a little “further” from the CPU in comparison to C. It is
+vastly used in the development of end-user software. For example, the text
+editor that was used to answer this questions was probably written (totally or
+partially) in C++. It opened up many important opportunities on the software
+engineering world, being one of the stepping stones on the appearance of Design
+Patterns and agile software development, which greatly improved the scalability
+of programming teams.
+
+- Scripting Languages: Some famous scripting programming languages are
+Javascript, Python, Ruby and PHP. This type of programming language is not
+compiled, but interpreted on runtime, instead. This means it usually runs on a
+Virtual Machine, which is an extra layer of compatibility between the program
+and the operating system. For that reason it runs very ‘far’ from the CPU.
+Scripted programming language is limited to the permissions that the virtual
+machine gives to the running software. Many of them are usually weakly typed,
+meaning variables can be set to values of different types without needing to
+have their declaration changed. They’re very useful on the development of web
+applications that run in the browser or in the server-side. Despite the usual
+lack of robustness, small-to-medium sized teams thrive on developing web apps
+using these languages.
+
+
+Describe the limitations of code reuse through inheritance in a large,
+diverse codebase.  Propose alternative solutions to these limitations.
+--------------------------------------
+	The use of inheritance in a large codebase can lead to a couple problems such
+as high dependence between the “parent” and “children” classes. Also, when using
+inheritance, a “child” brings any group of implementation choices done on the
+parent class. Overusing inheritance on multiple layers can increase the cost of
+running a the software (e.g. when a function generates calls to all the layered
+structure of parent classes). The children are so strongly bonded to the parent
+classes, in some cases, that any change in the parent can force major changes in
+the whole sub-class structure.
+  A good and well-known alternative to inheritance is to use composition, for
+example, which lowers the dependency between different classes, but still
+compromises the programmer on respecting a series of design choices. It helps
+guarantee that the programmer will respect software architecture and the
+higher-level design, also keeping a high level of flexibility on the actual
+implementation of classes.
+
+Reference source:
+https://mydevelopedworld.wordpress.com/2012/07/25/object-oriented-programming-inheritance-vs-composition/
+
+
+Compare and contrast the biggest challenges of console game development
+versus PC game development.
+--------------------------------------
+	The answer to this question has many nuances. I will try to separate the
+main differences in topics:
+
+- Programming: Despite the fact that most major developers have been using
+robust and highly compatible game engines on for a long time, there are many
+specificities to each platform’s architecture. In order to release a high
+quality multi-platform video game, a team has to spend a long time tweaking and
+optimizing their platform-specific versions.
+
+- Distribution: The distribution methods for PC and Console games are very
+different. While the PC game distribution is heavily digital for the last
+decade, relying in ecosystems like Valve’s Steam, EA’s Origin and The Humble
+Bundle, the Console distribution is still mostly done through physical media
+(like DVDs, Cartridges, Bluray Discs, etc.), relying on big retail stores like
+GameStop and Walmart to deliver the content to the end-user. Despite this, there
+have been changes observed on the past few years, showing that the giants of the
+console market (Microsoft, Sony, Nintendo) are interested in increasing their
+presence in the digital distribution model through first-party closed ecosystems
+like Sony’s Playstation Network and Playstation Plus’ paid plans, the Nintendo’s
+eShop and Microsoft’s XBox Live.
+
+- Licensing: While the PC platform is very open to independently developed
+games, the console market is still very closed to this type of game. Licensing
+is one of the most important parts of the console development process, and it is
+an expensive and highly bureaucratic process.
+
+
+How would you attempt to understand the design of a large code base in a short
+period of time?
+--------------------------------------
+	The best way to understand a large code is to look at the software
+architecture, learn about the design patterns that were used in the development,
+as well as read requirement documents that describe the function of each use
+case, and finally read the UML diagrams that show relation between classes in a
+project. Besides that, cooperating with the team is also a big part of
+understanding the source code, the development process in a company, and the
+relationship between different teams (e.g. art, design and programming).
+
+
+Talk about a few Best Practices you use when programming in a team environment.
+--------------------------------------
+	The most useful practice I use when programming is to keep my source code
+highly readable. My philosophy is to program in such a way that my colleagues
+can pick up any of my projects painlessly and quickly. I feel like a good
+programmer, besides being efficient, is a highly replaceable programmer who
+writes a comprehensible code.
+  Besides that, implementing some small agile development process practices has
+been one of the best choices I have made with my team. We do daily stand-up
+short meetings and we use the SCRUM board, but we still keep many waterfall
+development process practices. This hybrid process has made our team very
+efficient and integrated.
+
+
+Discuss an instance of a bad game design decision in an otherwise good game.
+--------------------------------------
+Prince of Persia (2008) - This game was a AAA title by Ubisoft that was supposed
+to work as a reboot to the franchise, after the highly successful Sands of Time
+saga. With renovated cel-shading graphics and a non-linear nearly-open-world
+exploration model, this game was a very well-designed title. The fact that the
+main character could not die, ever, was one of the most frequent complaints.
+Ubisoft was accused of implementing a game with a bias to pleasing the casual
+gamer only, which made the fanbase evade, and doomed this promising new saga to
+having only one game shipped.

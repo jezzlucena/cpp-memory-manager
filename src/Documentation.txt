@@ -1,0 +1,117 @@
+﻿MemoryManager.cpp - Solution Description and Documentation
+------------------------------------------------------------------------------
+- Created by Jezz Lucena on November 20, 2015.
+
+
+Solution Description
+--------------------------------------
+	The MemoryManager is a class that simulates a memory storage unit that
+can store 65536 units of the "char" type. Each "char" is composed by 8 bits,
+or a Byte. To be able to accurately address 65536 units, it is necessary to
+use 16 bits of data. Besides that, each "memory block" can be allocated. The
+size of an allocated memory block is arbitrary, and the size of the free blocks
+always consists of the sum of any adjacent free units, either starting from
+the initialization of the MemoryManager, or resulting from the deallocation
+of previously allocated memory blocks. On solving this problem, no extra global
+variables were allowed. This means that any metadata about the allocated memory
+needs to be stored within the same memory array as the actual data.
+	To solve this problem, the proposed solution for a memory allocation
+protocol will use the first 3 Bytes in each memory block to store metadata
+about the designated block. Each memory block looks like the diagram below:
+
+[ Control - 1 Byte | Addressing - 2 Bytes | Data - N Bytes ]
+
+- Control Byte: On this version of the protocol, the control Byte has only one
+meaningful bit. It looks like "xxxxxxxa", where "x" means 'unused bit' and "a"
+is the control bit that tells if the current memory block is allocated or not.
+If the "a" bit is set to 0, then it means the memory block is free, and if it is
+set to 1 it means the block is currently allocated. Since there are unused bits,
+further versions of the protocol could include more metadata about the memory
+blocks.
+
+         |- Allocation Status
+         v
+[ xxxxxxxa ]
+  |_____|- Unused Control Bits
+
+- Addressing Bytes: These 2 Bytes represent the size of the present block. Since
+this number could be anywhere from 1 to 65533 (considering that 3 bits are
+necessary to store any memory block's metadata), 16 bits are needed to represent
+a number of this magnitude. The size of the block does NOT include the 3 Bytes
+used to store metadata, but they need to be taken in account during the
+calculations. The first Byte includes the 8 most significant bits of the block's
+size, and the second Byte includes the following 8 least significant bits of the
+same number.
+
+[ nnnnnnnn | nnnnnnnn ] -> Memory Block's Numeric Size in Binary
+
+
+- Data Bytes: This is the area that can be used to store the data. When
+allocated, the MemoryManager returns a pointer to the first Byte on this
+section. Also, any deallocation operations are processed using this section's
+first Byte as reference, and NOT the Control Byte's address. The size of this
+section can vary from 1 Byte to 65533 Bytes. Even though the memory is 65536
+blocks big, 3 metadata Bytes are necessary to instantiate any memory block.
+
+[ (1~65533 Bytes) ] -> Usable Space in a Memory Block
+
+
+- Allocation Algorithm: Best Fit
+	The algorithm used to to allocate memory blocks considers the best fit for
+any requested allocation size. For example, if there are 2 free blocks, the
+algorithm will choose whichever of them leaves a smallest remaining space after
+allocation. This is done on an attempt to reduce fragmentation of the free
+memory spaces to a minimum.
+	If ever the user tries to allocate a space that can not be fit into any
+of the available spaces, then the MemoryManager calls the onOutOfMemory()
+function, which halts the execution of the code.
+
+- Deallocation Algorithm: Block Merging
+	On the best case, the deallocation algorithm simply changes the Allocation
+status control bit from "1" to "0". There is no control over memory segmentation
+or privacy, and the memory in a slot is not dumped after a deallocation.
+  The special cases happen when any of the adjacent memory blocks are free
+blocks. In this case, if the next block is free, its size is summed up to the
+total size of the resulting block. If the previous block is free, not only its
+size is summed to the size of the resulting memory block, but it also becomes
+the new address of the free block. Any metadata Bytes from merged blocks are
+also summed to the total free size.
+
+
+Next Steps
+--------------------------------------
+  This section of the documentation will describe possible improvements that can
+be done to the MemoryManager solution.
+
+- Optimized Control Bit: If we decide that a memory block can only have an even
+size, then we guarantee the last bit of the "size" Bytes is a 0. That way we can
+save a whole Byte by using the last bit on the Allocation Size Bytes as the
+Allocation Status bit. That way we can save the entire Control Byte, since all
+the other bits in it are "unused". That would make us waste 1 Byte every time an
+odd-sized allocation is attempted, by reserving it at the end of the memory
+block, but we would still save a whole Byte whenever an even-sized allocation
+is done.
+
+- Memory Block ID: Since only one bit of the control Byte is used, an
+interesting way to add value to its existence would be to store a "memory block
+id number" on it. Each allocated memory block allocated would have a unique id,
+while the free memory blocks would have the number "0" as an id. The id
+increment would reset after any 255 memory allocations, given the storage
+limitations of an 8 bit id. The very first Byte of the memory array would be the
+universal id increment counter. With this solution, we can make the solution
+more robust, by provide an id instead of a pointer to whoever uses the
+MemoryManager. Right now, if a block has the same address of a previously
+allocated memory block, it could lead to the deallocation of a block allocated
+later instead of throwing a "onIllegalOperation(...)", because the only way to
+address a block is by its own address in memory. With an unique id, as long as
+the user keeps track of ids instead of pointers, we can prevent the same block
+from being deallocated twice with the same address.
+
+- Garbage Collector: Currently, the deallocation of a block doesn't clean the
+data inside the memory block. It only marks the block as "free". This even
+happens with the way that the C language itself deals with memory segmentation.
+To increase the privacy, there could be a periodic routine that sets all the
+bits in a free memory block to 0, for example. This could be pretty costly on
+the processor. To save on processor cycles, it would be sensible to only do the
+garbage collection at every 10 deallocations, just as an example. There are many
+ways to define how a periodic routine is going to be triggered.
